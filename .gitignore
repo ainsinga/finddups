@@ -1,0 +1,19 @@
+# .gitignore
+#
+lex.yy.c
+syn.tab.c
+syn.tab.h
+y.tab.c
+y.tab.h
+micro3
+*~
+*.o
+*.a
+*.out*
+*.mcr
+*.uld
+# not yet under revision control:
+*.mic
+test_name.c
+test_num.c
+

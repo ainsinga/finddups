@@ -1,0 +1,21 @@
+# .gitattributes
+#
+# NOTE: So far, everything is text!
+#
+*.c      text eol=lf
+*.h      text eol=lf
+*.y      text eol=lf
+*.yy     text eol=lf
+*.sh     text eol=lf
+*.txt    text eol=lf
+do*      text eol=lf
+Makefile text eol=lf
+#
+## test output files
+*.out    text eol=lf
+##
+## But maybe these should be auto for TOPS-10, TOPS-20, or VMS compatibility?
+#*.mic    text eol=lf
+#*.mcr    text eol=lf
+#*.uld    text eol=lf
+*        text eol=lf
