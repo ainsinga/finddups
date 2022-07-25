@@ -18,4 +18,5 @@ Makefile text eol=lf
 #*.mic    text eol=lf
 #*.mcr    text eol=lf
 #*.uld    text eol=lf
+*.py     text eol=lf
 *        text eol=lf

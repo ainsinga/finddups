@@ -16,4 +16,6 @@ micro3
 *.mic
 test_name.c
 test_num.c
+*.pyc
+*.pyo
 
