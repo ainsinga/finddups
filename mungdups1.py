@@ -56,6 +56,25 @@ import fileinput, sys, string
 import adif_io
 from datetime import datetime, timedelta, timezone
 
+#### CLUBLOG MATCHING ####
+
+# https://clublog.freshdesk.com/support/solutions/articles/55757-log-matching
+# says that a match is defined as:
+# Clublog pairs-up matching QSO entries in uploaded logs,
+# recording new DXCC band/mode slots in the order that it finds them
+# in order to generate its Log matching reports.
+# In order to match a specific QSO in your log:
+#    ...(overhead)...
+#    The callsign you logged must correspond exactly...
+#    The band and mode of the QSO must correspond...
+#    The time of the QSO must be close ... within a tolerance of +/- 15 minutes.
+# Also:
+#    Clublog stores times rounded/truncated to the minute.
+#    Unrelated to matching, Clublog stores frequencies rounded (truncated?) to 3 decimal digits
+#        (0.001 MHz, 1 kHz).
+
+#### LOTW MATCHING ####
+
 # https://lotw.arrl.org/lotw-help/key-concepts/#confirmation
 # says that a match is defined as:
 #    your QSO description specifies a callsign that matches...
@@ -64,14 +83,15 @@ from datetime import datetime, timedelta, timezone
 #    both QSO descriptions specify the same band (and if specified, the same rx band)
 #    both QSO descriptions specify the same mode (an exact mode match), or
 #        must specify modes belonging to the same mode group
-#    for satellite QSOs, both QSO descriptions must specify the same satellite, andx
+#    for satellite QSOs, both QSO descriptions must specify the same satellite, and
 #        a propagation mode of SAT
-#
+# Also:
+#    LoTW stores times to the second.
+#    Unrelated to matching, LoTW keeps frequencies to 4 decimal digits
+#        (0.0001 MHz, 0.1 kHz).
+
 # So the "key" for our hashmap is (see SEP below):
 #    <CALL>|<QSO_DATE>|<BAND>|<RX_BAND>|<MODE>
-#
-# If you use the line-at-a-time version, the End tags (EOH and EOR) must be
-# at the end of the line!
 
 
 #### MANIFEST CONSTANTS ####
