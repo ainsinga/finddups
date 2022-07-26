@@ -272,6 +272,10 @@ def grind(qsos):
         qso_map[key] = (qso, keep)
 
     ####....####
+    # look for keys that might match
+    # count number of  kept and un-kept qsos for each key
+    # add PROPMODE=IRL to the ones that aren't being kept
+    ####....####
 
     return qso_map
 
@@ -284,10 +288,9 @@ def printQSOs(qsos, qso_map):
     pass
 
 """
-    for qso_map_entry in qso_map:
-        if KEY_APP_MUNGDUPS_KEEP in qso_map_entry:
-            if qso_map_entry[KEY_APP_MUNGDUPS_KEEP]:
-                print(qso)
+    for qso, keep in qso_map:
+        if keep:
+            print(qso)
 """
 ####
 
