@@ -49,7 +49,7 @@ PROGRAM_VERSION = '0.1'
 #    MatchObject.group(0) # (arg 0 is optional) entire string matching regex
 #    MatchObject.group(n1) # string for 1st paren group in regex
 #    MatchObject.group(n1, n2, ...) # tuple of paren groups in regex
-
+#    '<br/>'.join([f'{key}:: {value}' for key, value in d.items()])
 
 import fileinput, sys, string
 # import os
@@ -96,7 +96,8 @@ from datetime import datetime, timedelta, timezone
 
 #### MANIFEST CONSTANTS ####
 
-# this is not found at all in my .adi files so it will separate fields
+# This character is not found anywhere in my .adi files so
+# use it to separate fields in a key for a QSO.
 SEP = '|'
 
 # ADIF tags are supposed to be case-insensitive!
@@ -121,12 +122,28 @@ KEY_PROGRAMID = 'PROGRAMID'
 KEY_PROGRAM_VERSION = 'PROGRAM_VERSION'
 KEY_CREATED_TIMESTAMP = 'CREATED_TIMESTAMP'
 
+# QSO tags we will use in the key for matching QSOs.
+KEY_CALL = 'CALL'
+KEY_QSO_DATE = 'QSO_DATE'
+KEY_BAND = 'BAND'
+KEY_RX_BAND = 'RX_BAND'
+KEY_MODE = 'MODE'
+
+# Other QSO_TAGS
+KEY_QSL_RCVD = 'QSL_RCVD'
+
+
+TAG_NAMES_IN_KEY = [KEY_CALL, KEY_QSO_DATE, KEY_BAND, KEY_RX_BAND, KEY_MODE]
+
+####TODO: What if the input has USERDEFn tags in it?
+
 # Header tags (dict keys) from the input that we will NOT preserve
 # because they will probably be incorrect for the output.
 # adif_io seems to return them in upper case instead of '*_LoTW_*'.
 KEY_APP_LOTW_NUMREC = 'APP_LOTW_NUMREC'
 KEY_APP_LOTW_LASTQSORX = 'APP_LOTW_LASTQSORX'
 
+KEY_APP_MUNGDUPS_KEEP = 'APP_MUNGDUPS_KEEP'
 
 # disused (AFAIK) propagation mode, used in output to identify duplicates
 UNUSED_PROP_MODE = 'IRL'    # IRLP
@@ -167,12 +184,18 @@ def currentTimestamp():
 
 ####
 
+def makeKey(qso):
+    return 
+
+
+####
+
 # side effect: modifies the header dict
 
 #TODO: Make adif_io save text from start of input and print it first in Step 1.
 
 
-def printHeader(fileName, header):
+def mungHeader(fileName, header):
 
     # Step 1: We need to put something into the output that
     # doesn't start with '<' to indicate there is a header
@@ -194,7 +217,8 @@ def printHeader(fileName, header):
     header[KEY_PROGRAM_VERSION] = PROGRAM_VERSION
     header[KEY_CREATED_TIMESTAMP] = currentTimestamp()
 
-    # Step 4: Print the header tags.
+def printHeader(header):
+    # Print the header tags.
     # (If the ADIF version was in the input, we will print it here.)
 
     # Print these important identifying header tags first.
@@ -225,18 +249,70 @@ def printHeader(fileName, header):
 
 ####
 
+def grind(qsos):
+    qso_map = {}
+
+    # Ensure that all keys are present in all QSOs.
+    # (We could use get(key, default) but mostly
+    # it would re-write the same value that's already there.)
+    for qso in qsos:
+        for tag in TAG_NAMES_IN_KEY:
+            if not tag in qso:
+                qso[tag]=''
+
+        key = (f'{qso[KEY_CALL]}' + SEP +
+            f'{qso[KEY_QSO_DATE]}' + SEP +
+            f'{qso[KEY_BAND]}' + SEP +
+            f'{qso[KEY_RX_BAND]}' + SEP +
+            f'{qso[KEY_MODE]}')
+        # enter the qso and the initial 'keep' flag into qso_map
+        ####TODO: also QSL_SENT 
+        keep = (KEY_QSL_RCVD in qso) and (qso[KEY_QSL_RCVD] == 'Y')
+        print(f'#### keep: {keep}')
+        qso_map[key] = (qso, keep)
+
+    ####....####
+
+    return qso_map
+
+##SEP.join([f'{key}:: {value}' for key, value in d.items()])
+
+
+####
+
+def printQSOs(qsos, qso_map):
+    pass
+
+"""
+    for qso_map_entry in qso_map:
+        if KEY_APP_MUNGDUPS_KEEP in qso_map_entry:
+            if qso_map_entry[KEY_APP_MUNGDUPS_KEEP]:
+                print(qso)
+"""
+####
+
 def main(fileName):
     qsos, header =  adif_io.read_from_file(fileName)
 
+    mungHeader(fileName, header)
+
+    qso_map = grind(qsos)
+
     print('# --header--')
     print('# ', header)
+    print('# ----')
+
     print('# --qsos--')
     print('# ', qsos)
     print('# ----')
 
-    #TODO: grind()
+    printHeader(header)
 
-    printHeader(fileName, header)
+    printQSOs(qsos, qso_map)
+
+    print('# --qso_map--')
+    print('# ', qso_map)
+    print('# ----')
 
     #TODO: emitMungedLog()
     #TODO:WAS: f.close()
