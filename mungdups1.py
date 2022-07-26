@@ -203,20 +203,20 @@ def printHeader(fileName, header):
     # Ignore these header tags that will probably not be valid in the output.
     headerTagsToIgnore = [KEY_APP_LOTW_NUMREC, KEY_APP_LOTW_LASTQSORX] #WASL {KEY_APP_LOTW_NUMREC:None, KEY_APP_LOTW_LASTQSORX:None}
 
-    print('# headerTagsToIgnore: ', headerTagsToIgnore);
-    print('# headerTagsToWriteFirst: ', headerTagsToWriteFirst);
+    #DEBUG:print('# headerTagsToIgnore: ', headerTagsToIgnore);
+    #DEBUG:print('# headerTagsToWriteFirst: ', headerTagsToWriteFirst);
 
     # Print tags that were in the original file and not modified above in their
     # original case.  Tags modified above are all in upper case
 
     for k in header:
         if k in headerTagsToWriteFirst:
-            print('#   {} in headerTagsToWriteFirst: {}'.format(k, k in headerTagsToWriteFirst));
+            #DEBUG:print('#   {} in headerTagsToWriteFirst: {}'.format(k, k in headerTagsToWriteFirst));
             printTag(k, header[k])
     for k in header:
-        print('#   {} in headerTagsToIgnore: {}'.format(k, k in headerTagsToIgnore));
-        print('#   {} in headerTagsToWriteFirst: {}'.format(k, k in headerTagsToWriteFirst));
-        print('#   {} not in either: {}'.format(k, not (k in headerTagsToWriteFirst) and not (k in headerTagsToIgnore)));
+        #DEBUG:print('#   {} in headerTagsToIgnore: {}'.format(k, k in headerTagsToIgnore));
+        #DEBUG:print('#   {} in headerTagsToWriteFirst: {}'.format(k, k in headerTagsToWriteFirst));
+        #DEBUG:print('#   {} not in either: {}'.format(k, not (k in headerTagsToWriteFirst) and not (k in headerTagsToIgnore)));
         if not (k in headerTagsToWriteFirst) and not (k in headerTagsToIgnore):
             printTag(k, header[k])
 
@@ -228,11 +228,11 @@ def printHeader(fileName, header):
 def main(fileName):
     qsos, header =  adif_io.read_from_file(fileName)
 
-    print('--header--')
-    print(header)
-    #print('--qsos--')
-    #print(qsos)
-    print('----')
+    print('# --header--')
+    print('# ', header)
+    print('# --qsos--')
+    print('# ', qsos)
+    print('# ----')
 
     #TODO: grind()
 
