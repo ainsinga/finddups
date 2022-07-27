@@ -91,7 +91,8 @@ from datetime import datetime, timedelta, timezone
 #        (0.0001 MHz, 0.1 kHz).
 
 # So the "key" for our hashmap is (see SEP below):
-#    <CALL>|<QSO_DATE>|<BAND>|<RX_BAND>|<MODE>
+#    <CALL>|<QSO_DATE>|<TIME_ON>|<BAND>|<RX_BAND>|<MODE>
+####TODO: only hhmm of time_on? for search only
 
 
 #### MANIFEST CONSTANTS ####
@@ -125,6 +126,7 @@ KEY_CREATED_TIMESTAMP = 'CREATED_TIMESTAMP'
 # QSO tags we will use in the key for matching QSOs.
 KEY_CALL = 'CALL'
 KEY_QSO_DATE = 'QSO_DATE'
+KEY_TIME_ON = 'TIME_ON'
 KEY_BAND = 'BAND'
 KEY_RX_BAND = 'RX_BAND'
 KEY_MODE = 'MODE'
@@ -133,7 +135,7 @@ KEY_MODE = 'MODE'
 KEY_QSL_RCVD = 'QSL_RCVD'
 
 
-TAG_NAMES_IN_KEY = [KEY_CALL, KEY_QSO_DATE, KEY_BAND, KEY_RX_BAND, KEY_MODE]
+TAG_NAMES_IN_KEY = [KEY_CALL, KEY_QSO_DATE, KEY_TIME_ON, KEY_BAND, KEY_RX_BAND, KEY_MODE]
 
 ####TODO: What if the input has USERDEFn tags in it?
 
@@ -260,16 +262,32 @@ def grind(qsos):
             if not tag in qso:
                 qso[tag]=''
 
-        key = (f'{qso[KEY_CALL]}' + SEP +
-            f'{qso[KEY_QSO_DATE]}' + SEP +
-            f'{qso[KEY_BAND]}' + SEP +
-            f'{qso[KEY_RX_BAND]}' + SEP +
-            f'{qso[KEY_MODE]}')
+        # if time is empty, leave it alone.
+        # If time is 1-4 digits,
+        # assume it is (hours and) minutes without seconds
+        # (NOT (minutes and) seconds without hours)
+        # so fill in '00' for the missing seconds.
+        # Then add leading '0' so it is 6 digits.
+        time_on = qso[KEY_TIME_ON]
+        if len(time_on) >= 1:
+            if len(time_on) <= 4:
+                time_on = time_on + '00'
+                if len(time_on) < 6:
+                    time_on.zfill(6)
+        time_on = time_on[:4]    #### TRUNCATE TIME
+
+        key = (f'{qso[KEY_CALL]}{SEP}{qso[KEY_QSO_DATE]}{SEP}{time_on}{SEP}'
+               f'{qso[KEY_BAND]}{SEP}{qso[KEY_RX_BAND]}{SEP}{qso[KEY_MODE]}')
         # enter the qso and the initial 'keep' flag into qso_map
-        ####TODO: also QSL_SENT 
+        ####
+        ####TODO: also QSL_SENT, submitted for awards/credits?
+        ####
         keep = (KEY_QSL_RCVD in qso) and (qso[KEY_QSL_RCVD] == 'Y')
         print(f'#### keep: {keep}')
-        qso_map[key] = (qso, keep)
+        if not (key in qso_map):
+            qso_map[key] = []
+        qso_map[key].append( (qso, keep) )
+        print('####', key, len(qso_map[key]))
 
     ####....####
     # look for keys that might match
@@ -290,7 +308,7 @@ def printQSOs(qsos, qso_map):
 """
     for qso, keep in qso_map:
         if keep:
-            print(qso)
+            print(qso) #FIXME
 """
 ####
 
