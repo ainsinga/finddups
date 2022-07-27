@@ -268,26 +268,45 @@ def grind(qsos):
         # (NOT (minutes and) seconds without hours)
         # so fill in '00' for the missing seconds.
         # Then add leading '0' so it is 6 digits.
+        #time_on = qso[KEY_TIME_ON]
+        #if len(time_on) >= 1:
+        #    if len(time_on) <= 4:
+        #        time_on = time_on + '00'
+        #        if len(time_on) < 6:
+        #            time_on.zfill(6)
+
+        # ADIF requires the time to be either 4 or 6 digits.
+        # NOTE: TRUNCATE TIME (clublog doesn't round the time, does it?) TO 4 DIGITS
         time_on = qso[KEY_TIME_ON]
-        if len(time_on) >= 1:
-            if len(time_on) <= 4:
-                time_on = time_on + '00'
-                if len(time_on) < 6:
-                    time_on.zfill(6)
-        time_on = time_on[:4]    #### TRUNCATE TIME
+        if len(time_on) == 6:
+            time_on = time_on[:4]
 
         key = (f'{qso[KEY_CALL]}{SEP}{qso[KEY_QSO_DATE]}{SEP}{time_on}{SEP}'
                f'{qso[KEY_BAND]}{SEP}{qso[KEY_RX_BAND]}{SEP}{qso[KEY_MODE]}')
+
         # enter the qso and the initial 'keep' flag into qso_map
         ####
         ####TODO: also QSL_SENT, submitted for awards/credits?
         ####
         keep = (KEY_QSL_RCVD in qso) and (qso[KEY_QSL_RCVD] == 'Y')
-        print(f'#### keep: {keep}')
+        #print(f'#### keep: {keep}')
         if not (key in qso_map):
             qso_map[key] = []
         qso_map[key].append( (qso, keep) )
-        print('####', key, len(qso_map[key]))
+        #print('####', key, len(qso_map[key]))
+
+    for key, matching_qsos in qso_map.items():
+        n = len(matching_qsos)
+        if n == 1:
+            # set keep
+            pass
+        elif n == 2:
+            # TODO: see if more than 1 have keep
+            print('#### ', key, ' n matching QSOs = ', n)
+            pass
+        else:
+            if n > 2:
+                print('######## ', key, ' n matching QSOs = ', n)
 
     ####....####
     # look for keys that might match
@@ -308,7 +327,7 @@ def printQSOs(qsos, qso_map):
 """
     for qso, keep in qso_map:
         if keep:
-            print(qso) #FIXME
+            print(qso) #FIXME - print in ADIF format!
 """
 ####
 
@@ -319,21 +338,21 @@ def main(fileName):
 
     qso_map = grind(qsos)
 
-    print('# --header--')
-    print('# ', header)
-    print('# ----')
+    #print('# --header--')
+    #print('# ', header)
+    #print('# ----')
 
-    print('# --qsos--')
-    print('# ', qsos)
-    print('# ----')
+    #print('# --qsos--')
+    #print('# ', qsos)
+    #print('# ----')
 
     printHeader(header)
 
     printQSOs(qsos, qso_map)
 
-    print('# --qso_map--')
-    print('# ', qso_map)
-    print('# ----')
+    #print('# --qso_map--')
+    #print('# ', qso_map)
+    #print('# ----')
 
     #TODO: emitMungedLog()
     #TODO:WAS: f.close()
