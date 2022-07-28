@@ -132,6 +132,7 @@ KEY_RX_BAND = 'RX_BAND'
 KEY_MODE = 'MODE'
 
 # Other QSO_TAGS
+KEY_FREQ = 'FREQ'
 KEY_QSL_RCVD = 'QSL_RCVD'
 
 
@@ -173,6 +174,21 @@ def printEndTag(endTag):
     """Print an ADIF End of Header or End of Record tag"""
     print(endTag)
 
+def printQSO(qso):
+    print()
+    #####FIXME: ValueError: too many values to unpack (expected 2)
+    #for name, value in qso:
+    #    printTags(name, value)
+    printEndTag(END_OF_RECORD)
+
+####FIXME: do we print ones to keep, with more digits, or ones to ignore, or both?
+
+def printAllQSOs(qso_map, qsos):
+    for key, matches in qso_map.items():
+        for qso, keep in matches:
+            if (keep):
+                printQSO(qso)
+
 
 ####
 
@@ -182,12 +198,6 @@ def currentTimestamp():
     return '{:04d}{:02d}{:02d} {:02d}{:02d}{:02d}'.format(
         now.year, now.day, now.month,
         now.hour, now.minute, now.second)
-
-
-####
-
-def makeKey(qso):
-    return 
 
 
 ####
@@ -262,21 +272,10 @@ def grind(qsos):
             if not tag in qso:
                 qso[tag]=''
 
-        # if time is empty, leave it alone.
-        # If time is 1-4 digits,
-        # assume it is (hours and) minutes without seconds
-        # (NOT (minutes and) seconds without hours)
-        # so fill in '00' for the missing seconds.
-        # Then add leading '0' so it is 6 digits.
-        #time_on = qso[KEY_TIME_ON]
-        #if len(time_on) >= 1:
-        #    if len(time_on) <= 4:
-        #        time_on = time_on + '00'
-        #        if len(time_on) < 6:
-        #            time_on.zfill(6)
-
         # ADIF requires the time to be either 4 or 6 digits.
-        # NOTE: TRUNCATE TIME (clublog doesn't round the time, does it?) TO 4 DIGITS
+        # NOTE: TRUNCATE TIME (clublog doesn't round the time, does it?) TO 4 DIGITS to find matches.
+        # If the time is 6 digits, truncate it to 4 digits.
+        # Otherwise the time was already 4 digits.
         time_on = qso[KEY_TIME_ON]
         if len(time_on) == 6:
             time_on = time_on[:4]
@@ -286,7 +285,7 @@ def grind(qsos):
 
         # enter the qso and the initial 'keep' flag into qso_map
         ####
-        ####TODO: also QSL_SENT, submitted for awards/credits?
+        ####TODO: also QSL_SENT & submitted for awards/credits?
         ####
         keep = (KEY_QSL_RCVD in qso) and (qso[KEY_QSL_RCVD] == 'Y')
         #print(f'#### keep: {keep}')
@@ -295,24 +294,53 @@ def grind(qsos):
         qso_map[key].append( (qso, keep) )
         #print('####', key, len(qso_map[key]))
 
-    for key, matching_qsos in qso_map.items():
-        n = len(matching_qsos)
+    print('---- grinding ----')
+    for key, matches in qso_map.items():
+        print('## key = ', key)
+        n_keep = 0
+        for qso, keep in matches:
+            if (keep):
+                n_keep += 1
+            #print('##     qso = ', qso)
+            #print('##     keep = ', keep)
+            print('##     qso freq = ', qso[KEY_FREQ], ' time on = ', qso[KEY_TIME_ON], ' keep = ', keep)
+        n = len(matches)
+        print('##   n = ', n, 'n_keep = ', n_keep)
+        choice = -1
         if n == 1:
-            # set keep
-            pass
+            # set keep on the only match (index 0)
+            choice = 0
         elif n == 2:
             # TODO: see if more than 1 have keep
             print('#### ', key, ' n matching QSOs = ', n)
-            pass
+            if n_keep == 0:
+                choice = 1    # decide which one of the 2 to keep (index 0 or 1), assume 1 for now
         else:
             if n > 2:
                 print('######## ', key, ' n matching QSOs = ', n)
+            choice = 2    # decide which one of the 3 or more to keep (index 0 or 1 or something greater), assume 2 for now
+        if choice >= 0:
+            matches[choice] = (qso, True)
 
-    ####....####
-    # look for keys that might match
-    # count number of  kept and un-kept qsos for each key
-    # add PROPMODE=IRL to the ones that aren't being kept
-    ####....####
+    ####DEBUG: look at precision of freq and time (and what partner says??)
+    ####DEBUG: say WHY the choice was selected
+
+    print('---- checking ----')
+    for key, matches in qso_map.items():
+        print('## key = ', key)
+        n_keep = 0
+        for qso, keep in matches:
+            if (keep):
+                n_keep += 1
+            print('##     qso freq = ', qso[KEY_FREQ], ' time on = ', qso[KEY_TIME_ON], ' keep = ', keep)
+        n = len(matches)
+        print('##   n = ', n, 'n_keep = ', n_keep)
+
+    ####
+    #### look for keys that might match
+    #### count number of  kept and un-kept qsos for each key
+    #### add PROPMODE=IRL to the ones that aren't being kept
+    ####
 
     return qso_map
 
@@ -321,14 +349,6 @@ def grind(qsos):
 
 ####
 
-def printQSOs(qsos, qso_map):
-    pass
-
-"""
-    for qso, keep in qso_map:
-        if keep:
-            print(qso) #FIXME - print in ADIF format!
-"""
 ####
 
 def main(fileName):
@@ -348,11 +368,11 @@ def main(fileName):
 
     printHeader(header)
 
-    printQSOs(qsos, qso_map)
-
     #print('# --qso_map--')
     #print('# ', qso_map)
     #print('# ----')
+
+    printAllQSOs(qso_map, qsos)
 
     #TODO: emitMungedLog()
     #TODO:WAS: f.close()
