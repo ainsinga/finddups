@@ -182,12 +182,15 @@ def printQSO(qso):
     printEndTag(END_OF_RECORD)
 
 ####FIXME: do we print ones to keep, with more digits, or ones to ignore, or both?
+####FIXME: ignore the QSOs with no duplicates either way
 
 def printAllQSOs(qso_map, qsos):
     for key, matches in qso_map.items():
-        for qso, keep in matches:
-            if (keep):
-                printQSO(qso)
+        # Ignore the QSOs with no duplicates
+        if len(matches) > 1:
+            for qso, keep in matches:
+                if keep:
+                    printQSO(qso)
 
 
 ####
@@ -327,13 +330,15 @@ def grind(qsos):
 
     print('---- checking ----')
     for key, matches in qso_map.items():
-        print('## key = ', key)
         n_keep = 0
-        for qso, keep in matches:
-            if (keep):
-                n_keep += 1
-            print('##     qso freq = ', qso[KEY_FREQ], ' time on = ', qso[KEY_TIME_ON], ' keep = ', keep)
+        print('## key = ', key)
+        # Ignore the QSOs with no duplicates
         n = len(matches)
+        if n > 1:
+            for qso, keep in matches:
+                if (keep):
+                    n_keep += 1
+                    print('##     qso freq = ', qso[KEY_FREQ], ' time on = ', qso[KEY_TIME_ON], ' keep = ', keep)
         print('##   n = ', n, 'n_keep = ', n_keep)
 
     ####
