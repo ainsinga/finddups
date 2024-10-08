@@ -32,4 +32,12 @@ unrelated to "dups" as in "dup sheets" or scoring for contests.
  * This program needs to be modified for your exact needs.
  * This program does not affect any databases, it just prints some output.
 
+THE REAL PROBLEM WAS A DIFFERENT NUMBER OF DIGITS IN THE EXPORTED
+FREQUENCY.  Some web sites or log programs let you change the number
+of decimal places to use when exporting ADIF.  But LotW will see
+e.g. 13.729 and 13.700 as different QOSs!  To put it another way, I
+should have known to NEVER EXPORT FROM CLUBLOG OR LET IT UPLOAD TO LOTW.
+
+See the comments in finddups1.py for details!
+
 Aron Insinga, W1AKI, 7 December 2023
