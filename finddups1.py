@@ -15,8 +15,8 @@
 #  limitations under the License.
 
 # This was written by Aron K. Insinga, W1AKI.
-# It contains an unmodified copy of an ADIF parser by Andreas Kraeger, DJ3EI.
 # Initial creation: 23-28 July 2022
+# This software contains a copy of an ADIF parser by Andreas Kraeger, DJ3EI.
 # The name was changed from mungdups1 to finddups1: 07 December 2023
 # (after not doing anything with this program for over a year)
 
