@@ -23,7 +23,7 @@
 ###########################################################################
 # NOTE: This has nothing to do with "dups" as in "dup sheets" for contests.
 # This refers to LotW entries that are duplicates because they match except
-# except for the number of decimal places in the frewuency.
+# for the number of decimal places in the frequency.
 ###########################################################################
 
 PROGRAM_NAME = 'finddups1'    # probably sys.argv[0] without the path
