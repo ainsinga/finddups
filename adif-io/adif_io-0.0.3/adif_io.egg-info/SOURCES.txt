@@ -1,0 +1,7 @@
+README.md
+setup.py
+adif_io/__init__.py
+adif_io.egg-info/PKG-INFO
+adif_io.egg-info/SOURCES.txt
+adif_io.egg-info/dependency_links.txt
+adif_io.egg-info/top_level.txt
