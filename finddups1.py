@@ -29,15 +29,12 @@
 PROGRAM_NAME = 'finddups1'    # probably sys.argv[0] without the path
 PROGRAM_VERSION = '0.1'
 
-# Okay, the problem is that some web sites or log programs let you change the
-# number of decimal places to use when exporting ADIF.  But LotW will see
-# e.g. 13.729 and 13.700 as different QOSs!
 
-# So, CAVEAT EMPTOR: NEVER EXPORT FROM CLUBLOG OR LET IT UPLOAD TO LOTW.
-# Otherwise, you will have to do something like this program does.
-# (Or wait for LoTW 2.0 which will let you hide mangled QSOs, realsoonnow.)
-#
-# THE REAL PROBLEM WAS A DIFFERENT NUMBER OF DIGITS IN THE EXPORTED FREQUENCY.
+# THE REAL PROBLEM WAS A DIFFERENT NUMBER OF DIGITS IN THE EXPORTED
+# FREQUENCY.  Some web sites or log programs let you change the number
+# of decimal places to use when exporting ADIF.  But LotW will see
+# e.g. 13.729 and 13.700 as different QOSs!  To put it another way, I
+# should have known to NEVER EXPORT FROM CLUBLOG OR LET IT UPLOAD TO LOTW.
 
 # SUMMARY:
 #
@@ -98,10 +95,10 @@ from datetime import datetime, timedelta, timezone
 #    The callsign you logged must correspond exactly...
 #    The band and mode of the QSO must correspond...
 #    The time of the QSO must be close ... within a tolerance of +/- 15 minutes.
-# Also:
+# Note:
 #    Clublog stores times rounded/truncated to the minute.
-#    Unrelated to matching, Clublog stores frequencies rounded (truncated?) to 3 decimal digits
-#        (0.001 MHz, 1 kHz).
+#    Unrelated to matching, Clublog stores frequencies rounded (truncated?)
+#        to 3 decimal digits (0.001 MHz, 1 kHz).
 
 #### LOTW MATCHING ####
 
@@ -115,7 +112,7 @@ from datetime import datetime, timedelta, timezone
 #        must specify modes belonging to the same mode group
 #    for satellite QSOs, both QSO descriptions must specify the same satellite, and
 #        a propagation mode of SAT
-# Also:
+#TODO Also:
 #    LoTW stores times to the second.
 #    Unrelated to matching, LoTW keeps frequencies to 4 decimal digits
 #        (0.0001 MHz, 0.1 kHz).
@@ -345,7 +342,7 @@ def grind(qsos):
             # set keep on the only match (index 0)
             choice = 0
         elif n == 2:
-            # TODO: see if more than 1 have keep
+            #TODO: see if more than 1 have keep set
             print('#### ', key, ' n matching QSOs = ', n)
             if n_keep == 0:
                 choice = 1    # decide which one of the 2 to keep (index 0 or 1), assume 1 for now (TODO: check for most resolution in the frequency?)

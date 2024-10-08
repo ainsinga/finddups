@@ -27,8 +27,9 @@ entries in an ADIF file.  If one of the copies is confirmed, that is a
 incorrect] data in the ARRL LotW database.)  This is completely
 unrelated to "dups" as in "dup sheets" or scoring for contests.
 
- * This program is not a finished product and should not be relied upon.
- * This program does not affect any databases, it just prints some output.
+ * This program has a bunch of TODO and FIXME comments in it.
+ * This program is not a finished product; do not rely on its correctness.
  * This program needs to be modified for your exact needs.
+ * This program does not affect any databases, it just prints some output.
 
 Aron Insinga, W1AKI, 7 December 2023
