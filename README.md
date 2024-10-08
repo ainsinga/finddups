@@ -2,24 +2,22 @@ README.md for finddups1.py (python3)
 
 Copyright 2024 Aron K. Insinga
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+>Licensed under the Apache License, Version 2.0 (the "License");
+>you may not use this file except in compliance with the License.
+>You may obtain a copy of the License at
+>
+>    http://www.apache.org/licenses/LICENSE-2.0
+>
+>Unless required by applicable law or agreed to in writing, software
+>distributed under the License is distributed on an "AS IS" BASIS,
+>WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+>See the License for the specific language governing permissions and
+>limitations under the License.
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
----------------------------------------------------------------------------
-This software contains a copy of an ADIF parser by Andreas Kraeger, DJ3EI.
-The only changes to it were to add parens after the argument to print
-to fix a python2-python3 incompatibility.  See
-/adif-io/adif_io-0.0.3/adif_io/__init__.py
----------------------------------------------------------------------------
+>This software contains a copy of an ADIF parser by Andreas Kraeger, DJ3EI.
+>The only changes to it were to add parens after the argument to print
+>to fix a python2-python3 incompatibility.  See
+>/adif-io/adif_io-0.0.3/adif_io/\_\_init\_\_.py
 
 finddups1.py is a PROTOTYPE program for finding DUPLICATE, UNCONFIRMED
 entries in an ADIF file.  If one of the copies is confirmed, that is a
