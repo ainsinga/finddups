@@ -21,9 +21,9 @@ Copyright 2024 Aron K. Insinga
 
 finddups1.py is a PROTOTYPE program for finding DUPLICATE, UNCONFIRMED
 entries in an ADIF file.  If one of the copies is confirmed, that is a
-"keeper"!  (Not that you can do anything to the duplicate [or
-incorrect] data in the ARRL LotW database.)  This is completely
-unrelated to "dups" as in "dup sheets" or scoring for contests.
+"keeper", the other one is the duplicate!  (Not that you can do anything
+to the duplicate [or incorrect] data in the ARRL LotW database.)  This
+is completely unrelated to "dups" as in "dup sheets" for contest scoring.
 
  * This program has a bunch of TODO and FIXME comments in it.
  * This program is not a finished product; do not rely on its correctness.
