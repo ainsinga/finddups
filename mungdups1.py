@@ -186,6 +186,7 @@ def printQSO(qso):
 
 def printAllQSOs(qso_map, qsos):
     for key, matches in qso_map.items():
+        #FIXME: MAKE IT AN OPTION TO IGNORE THEM IN QSOs TO KEEP!
         # Ignore the QSOs with no duplicates
         if len(matches) > 1:
             for qso, keep in matches:
