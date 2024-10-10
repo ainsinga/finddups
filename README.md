@@ -34,7 +34,8 @@ THE REAL PROBLEM WAS A DIFFERENT NUMBER OF DIGITS IN THE EXPORTED
 FREQUENCY.  Some web sites or log programs let you change the number
 of decimal places to use when exporting ADIF.  But LotW will see
 e.g. 13.729 and 13.700 as different QOSs!  To put it another way, I
-should have known to NEVER EXPORT FROM CLUBLOG OR LET IT UPLOAD TO LOTW.
+should have known to NEVER EXPORT FROM CLUBLOG OR LET IT UPLOAD TO LOTW
+(without checking the number of decimal places for the frequency first)!
 
 See the comments in finddups1.py for details!
 
